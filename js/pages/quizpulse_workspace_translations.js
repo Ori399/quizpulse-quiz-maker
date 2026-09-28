@@ -252,7 +252,7 @@
         'Saved': 'محفوظ', 'Saved ✓': 'تم الحفظ ✓', 'Unsaved': 'غير محفوظ', 'Finish': 'إنهاء', 'Fin': 'إنهاء',
         'Finish quiz': 'إنهاء الاختبار', 'Preview quiz': 'معاينة الاختبار', 'Host quiz': 'استضافة الاختبار',
         'More actions': 'إجراءات إضافية', 'More': 'المزيد', 'Close more actions': 'إغلاق الإجراءات الإضافية',
-        'Exit creator': 'الخروج من المحرر', 'Download XLSX template': 'تنزيل قالب XLSX', 'Import XLSX': 'استيراد XLSX',
+        'Exit creator': 'الخروج من المحرر', 'Download XLSX template': 'تنزيل قالب XLSX', 'Import XLSX': 'استيراد XLSX', 'Export XLSX': 'تصدير XLSX',
         'Questions': 'الأسئلة', 'Question': 'السؤال', 'Open questions': 'فتح الأسئلة', 'Collapse question list': 'طي قائمة الأسئلة',
         'Reorder questions': 'إعادة ترتيب الأسئلة', 'Reorder': 'إعادة الترتيب', 'Done': 'تم', 'Add question': 'إضافة سؤال',
         'Creator views': 'طرق عرض المحرر', 'Canvas': 'المحرر', 'More settings': 'إعدادات إضافية', 'Settings': 'الإعدادات',

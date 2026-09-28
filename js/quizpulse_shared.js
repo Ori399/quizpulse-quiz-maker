@@ -139,7 +139,7 @@ window.QuizPulse = (() => {
   // The versioned admin theme runtime is isolated from the legacy light-mode API.
   if (!OFFLINE && document.head?.appendChild && !window.QuizPulseTheme && !document.querySelector('script[data-quizpulse-theme-runtime]')) {
     const themeRuntime = document.createElement('script');
-    themeRuntime.src = '/js/quizpulse_theme_runtime.js?v=f34d55bbfbbd';
+    themeRuntime.src = '/js/quizpulse_theme_runtime.js?v=9fc817d3a86d';
     themeRuntime.defer = true;
     themeRuntime.dataset.quizpulseThemeRuntime = '1';
     document.head.appendChild(themeRuntime);
@@ -611,10 +611,10 @@ window.QuizPulse = (() => {
     if (OFFLINE || document.querySelector('script[data-quizpulse-guide]')) return;
     const styles = document.createElement('link');
     styles.rel = 'stylesheet';
-    styles.href = '/css/quizpulse_guide.css?v=f34d55bbfbbd';
+    styles.href = '/css/quizpulse_guide.css?v=9fc817d3a86d';
     styles.dataset.quizpulseGuideStyles = '1';
     document.head.appendChild(styles);
-    for (const src of ['/js/quizpulse_guide.js?v=f34d55bbfbbd']) {
+    for (const src of ['/js/quizpulse_guide.js?v=9fc817d3a86d']) {
       const script = document.createElement('script');
       script.src = src;
       script.defer = true;
@@ -635,7 +635,7 @@ window.QuizPulse = (() => {
     if (document.querySelector('link[data-quizpulse-chat-styles]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/quizpulse_chat.css?v=f34d55bbfbbd';
+    link.href = '/css/quizpulse_chat.css?v=9fc817d3a86d';
     link.dataset.quizpulseChatStyles = '1';
     document.head.appendChild(link);
   }
@@ -681,7 +681,7 @@ window.QuizPulse = (() => {
     ensureAdaptiveChatStyles();
     adaptiveChatLoadPromise = new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = '/js/pages/quizpulse_chat_page.js?v=f34d55bbfbbd';
+      script.src = '/js/pages/quizpulse_chat_page.js?v=9fc817d3a86d';
       script.async = true;
       script.onload = () => window.QuizPulseChat?.open ? resolve(window.QuizPulseChat) : reject(new Error('Chat could not be loaded'));
       script.onerror = () => reject(new Error('Chat could not be loaded'));
@@ -909,7 +909,7 @@ window.QuizPulse = (() => {
 
   async function messagePushRegistration() {
     if (!window.isSecureContext || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return null;
-    return await navigator.serviceWorker.getRegistration('/') || navigator.serviceWorker.register('/sw.js?v=f34d55bbfbbd', { scope: '/' });
+    return await navigator.serviceWorker.getRegistration('/') || navigator.serviceWorker.register('/sw.js?v=9fc817d3a86d', { scope: '/' });
   }
 
   function supportsMessagePush() {
@@ -1096,7 +1096,7 @@ window.QuizPulse = (() => {
       if (!document.querySelector('link[data-qp-cosmetics]')) {
         const stylesheet = document.createElement('link');
         stylesheet.rel = 'stylesheet';
-        stylesheet.href = '/css/quizpulse_cosmetics.css?v=f34d55bbfbbd';
+        stylesheet.href = '/css/quizpulse_cosmetics.css?v=9fc817d3a86d';
         stylesheet.dataset.qpCosmetics = '1';
         document.head.appendChild(stylesheet);
       }
@@ -1107,7 +1107,7 @@ window.QuizPulse = (() => {
         return;
       }
       const script = document.createElement('script');
-      script.src = '/js/quizpulse_cosmetics.js?v=f34d55bbfbbd';
+      script.src = '/js/quizpulse_cosmetics.js?v=9fc817d3a86d';
       script.defer = true;
       script.dataset.qpCosmetics = '1';
       script.onload = () => resolve(window.QuizPulseCosmetics);

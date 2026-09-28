@@ -3258,24 +3258,17 @@
 
   // What the offline creator leaves out and says instead: no menu of the server's pages, no practice or hosting, no saved
   // versions; Finish exports; a line under the bar says how the quiz reaches the university.
-  // The words the offline creator has of its own, in the language the teacher picks on the banner (the page has no
-  // dashboard to pick it on).
+  // The words the offline creator has of its own, in the language the teacher picks in More (the page has no dashboard
+  // to pick it on). A first visit starts in the browser's language.
   const OFFLINE_TEXT = {
-    en: {
-      finish: 'Finish & export', finishShort: 'Export', finishLabel: 'Finish and export the quiz', title: 'QuizPulse offline quiz maker',
-      banner: '<b>Offline quiz maker.</b> Nothing leaves this computer. <b>Finish &amp; export</b> downloads your quiz as a file; at the university, open Create Quiz, then More, then Import XLSX. Pictures and Pin on Image questions are added there.',
-      other: 'ar', otherName: 'العربية'
-    },
-    ar: {
-      finish: 'إنهاء وتصدير', finishShort: 'تصدير', finishLabel: 'إنهاء وتصدير الاختبار', title: 'QuizPulse - صانع الاختبارات دون اتصال',
-      banner: '<b>صانع الاختبارات دون اتصال.</b> لا يُرسل شيء من هذا الجهاز. <b>إنهاء وتصدير</b> يحمّل اختبارك في ملف؛ في الجامعة افتح إنشاء اختبار ← المزيد ← Import XLSX. تضاف الصور وأسئلة التثبيت على الصورة هناك.',
-      other: 'en', otherName: 'English'
-    }
+    en: { finish: 'Finish & export', finishShort: 'Export', finishLabel: 'Finish and export the quiz', title: 'QuizPulse offline quiz maker',
+      other: 'ar', otherName: 'العربية', otherLabel: 'تغيير اللغة إلى العربية' },
+    ar: { finish: 'إنهاء وتصدير', finishShort: 'تصدير', finishLabel: 'إنهاء وتصدير الاختبار', title: 'QuizPulse - صانع الاختبارات دون اتصال',
+      other: 'en', otherName: 'English', otherLabel: 'Switch language to English' }
   };
 
   function renderOfflineText() {
-    const language = QuizPulse.language?.() === 'ar' ? 'ar' : 'en';
-    const text = OFFLINE_TEXT[language];
+    const text = OFFLINE_TEXT[QuizPulse.language?.() === 'ar' ? 'ar' : 'en'];
     const finish = document.getElementById('finishBtn');
     finish?.setAttribute('aria-label', text.finishLabel);
     const full = finish?.querySelector('.qp-finish-label-full');
@@ -3283,10 +3276,13 @@
     if (full) full.textContent = text.finish;
     if (compact) compact.textContent = text.finishShort;
     document.title = text.title;
-    const banner = document.querySelector('.qp-offline-banner');
-    if (!banner) return;
-    banner.dir = language === 'ar' ? 'rtl' : 'ltr';
-    banner.innerHTML = `<span>${text.banner}</span><button class="qp-btn qp-offline-language" type="button" lang="${text.other}" data-language="${text.other}">${text.otherName}</button>`;
+    const choice = document.querySelector('.qp-offline-language');
+    if (!choice) return;
+    choice.textContent = text.otherName;
+    choice.lang = text.other;
+    choice.dataset.language = text.other;
+    choice.setAttribute('aria-label', text.otherLabel);
+    choice.title = text.otherLabel;
   }
 
   function applyOfflineCreator() {
@@ -3297,14 +3293,12 @@
     // Exit creator: there is no signed-in site to go back to (the build points its links nowhere).
     document.querySelectorAll('.qp-tools-menu-panel a[href$="dashboard"], .qp-tools-menu-panel a[href="#"]').forEach(link => link.remove());
     document.querySelectorAll('a.qp-brand, a.qp-dashboard-logo').forEach(link => link.removeAttribute('href'));
-    const banner = document.createElement('div');
-    banner.className = 'qp-offline-banner';
-    banner.setAttribute('role', 'note');
-    banner.addEventListener('click', event => {
-      const choice = event.target.closest('.qp-offline-language');
-      if (choice) QuizPulse.setLanguage(choice.dataset.language);
-    });
-    document.querySelector('.qp-topbar')?.after(banner);
+    const choice = document.createElement('button');
+    choice.type = 'button';
+    choice.className = 'qp-btn small qp-offline-language';
+    choice.addEventListener('click', () => QuizPulse.setLanguage(choice.dataset.language));
+    document.querySelector('.qp-tools-menu-head')?.after(choice);
+    if (!QuizPulse.storageGet('quizpulseLanguage', '') && /^ar\b/i.test(navigator.language || '')) QuizPulse.setLanguage('ar');
     renderOfflineText();
     document.addEventListener('quizpulse:language-changed', renderOfflineText);
   }

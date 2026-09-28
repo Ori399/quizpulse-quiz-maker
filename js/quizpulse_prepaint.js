@@ -69,7 +69,7 @@
       if (scheme === 'dark' && !document.querySelector('link[data-quizpulse-dark-styles]')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = '/css/quizpulse_dark.css?v=f34d55bbfbbd';
+      link.href = '/css/quizpulse_dark.css?v=9fc817d3a86d';
       link.dataset.quizpulseDarkStyles = '1';
       document.head.appendChild(link);
       }
