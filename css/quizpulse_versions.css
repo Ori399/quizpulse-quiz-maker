@@ -1,0 +1,8 @@
+.qp-versions-dialog { width: min(720px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; border: 1px solid var(--qpt-border, var(--qp-border)); border-radius: 16px; padding: 24px; color: var(--qpt-text, var(--qp-text)); background: var(--qpt-surface, var(--qp-panel)); }
+.qp-versions-dialog::backdrop { background: rgb(15 23 42 / 60%); }
+.qp-versions-dialog header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.qp-versions-dialog h2 { margin: 0; }
+.qp-versions-dialog select { width: 100%; margin: 12px 0; }
+.qp-versions-dialog li { padding: 8px 0; overflow-wrap: anywhere; }
+.qp-versions-dialog [role="status"] { min-height: 1.5em; }
+.qp-versions-dialog [hidden] { display: none !important; }

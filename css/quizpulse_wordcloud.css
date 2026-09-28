@@ -1,0 +1,378 @@
+/* QuizPulse word cloud question (src/shared/question_engine.js, quizpulse_shared.js mountWordCloud).
+   Everything the word cloud draws is styled here: the cloud itself on the host's board and results, the student's
+   word boxes and thank-you card, the teacher's side panel, and the question editor's settings. */
+
+:root {
+  --qp-wc-panel-bg: rgba(255, 255, 255, .78);
+  --qp-wc-panel-border: rgba(109, 40, 217, .16);
+  --qp-wc-text-muted: #6b7280;
+  --qp-wc-c0: #5b21b6;
+  --qp-wc-c1: #0f766e;
+  --qp-wc-c2: #c2410c;
+  --qp-wc-c3: #be185d;
+  --qp-wc-c4: #1d4ed8;
+  --qp-wc-c5: #a16207;
+}
+
+html[data-theme="dark"] {
+  --qp-wc-panel-bg: rgba(20, 16, 33, .78);
+  --qp-wc-panel-border: rgba(196, 181, 253, .22);
+  --qp-wc-text-muted: #a8a3b8;
+  --qp-wc-c0: #c4b5fd;
+  --qp-wc-c1: #5eead4;
+  --qp-wc-c2: #fdba74;
+  --qp-wc-c3: #f9a8d4;
+  --qp-wc-c4: #93c5fd;
+  --qp-wc-c5: #fde047;
+}
+
+/* -- the cloud -------------------------------------------------------------- */
+
+.qp-wordcloud-live {
+  width: 100%;
+}
+
+/* The host's board is a column that puts the question card first (order 1); the cloud belongs under it. */
+#hostApp .qp-simple-host-board > .qp-wordcloud-live {
+  order: 3;
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+}
+
+#hostApp .qp-simple-host-board > .qp-wordcloud-live .qp-wordcloud-stage {
+  height: auto;
+  min-height: clamp(280px, 48vh, 620px);
+}
+
+.qp-wordcloud-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 52vh, 640px);
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--qp-wc-panel-border);
+  /* A frosted panel, so the words stay readable over a question's background picture. */
+  background: var(--qp-wc-panel-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.qp-wordcloud-result {
+  height: clamp(260px, 46vh, 560px);
+  margin-top: 14px;
+}
+
+.qp-wordcloud-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--qp-wc-text-muted);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.qp-wordcloud-empty span {
+  font-size: 44px;
+  animation: qp-wordcloud-float 3s ease-in-out infinite;
+}
+
+.qp-wordcloud-stage.has-words .qp-wordcloud-empty {
+  display: none;
+}
+
+.qp-wordcloud-word {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.08;
+  white-space: nowrap;
+  letter-spacing: -.01em;
+  /* Only the position animates. A word's size changes at once, because the layout measures words to keep them apart
+     and a word measured halfway through growing would be placed over its neighbour. */
+  transition: transform .65s cubic-bezier(.2, 1.25, .35, 1), opacity .35s ease;
+  will-change: transform;
+}
+
+button.qp-wordcloud-word {
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+button.qp-wordcloud-word:hover,
+button.qp-wordcloud-word:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.qp-wordcloud-word.is-new {
+  opacity: 0;
+}
+
+.qp-wordcloud-word.is-unplaced {
+  visibility: hidden;
+}
+
+.qp-wordcloud-word.is-hidden-word {
+  opacity: .28;
+  text-decoration: line-through;
+}
+
+.qp-wc-c0 { color: var(--qp-wc-c0); }
+.qp-wc-c1 { color: var(--qp-wc-c1); }
+.qp-wc-c2 { color: var(--qp-wc-c2); }
+.qp-wc-c3 { color: var(--qp-wc-c3); }
+.qp-wc-c4 { color: var(--qp-wc-c4); }
+.qp-wc-c5 { color: var(--qp-wc-c5); }
+
+@keyframes qp-wordcloud-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qp-wordcloud-word { transition: opacity .2s ease; }
+  .qp-wordcloud-empty span { animation: none; }
+}
+
+/* -- the teacher's side panel ------------------------------------------------- */
+
+.qp-wordcloud-panel {
+  position: fixed;
+  top: 96px;
+  right: 20px;
+  z-index: 60;
+  width: min(340px, calc(100vw - 40px));
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid var(--qp-wc-panel-border);
+  background: var(--qp-card, #fff);
+  color: var(--qp-text, #111827);
+  box-shadow: 0 18px 48px rgba(24, 16, 52, .22);
+}
+
+.qp-wordcloud-panel header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qp-wordcloud-panel-word {
+  font-size: 22px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.qp-wordcloud-panel-count {
+  color: var(--qp-wc-text-muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.qp-wordcloud-panel-close {
+  margin-inline-start: auto;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(109, 40, 217, .08);
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.qp-wordcloud-panel-note {
+  margin: 6px 0 12px;
+  color: var(--qp-wc-text-muted);
+  font-size: 13px;
+}
+
+.qp-wordcloud-panel-list {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.qp-wordcloud-panel-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(109, 40, 217, .06);
+  font-weight: 600;
+}
+
+.qp-wordcloud-panel-avatar {
+  font-size: 20px;
+}
+
+.qp-wordcloud-panel-hide {
+  width: 100%;
+}
+
+/* -- the student ------------------------------------------------------------ */
+
+.qp-wordcloud-answer {
+  display: grid;
+  gap: 10px;
+  width: min(520px, 100%);
+  margin: 0 auto;
+}
+
+.qp-wordcloud-field {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 58px;
+}
+
+.qp-wordcloud-hint {
+  color: var(--qp-wc-text-muted);
+  text-align: center;
+}
+
+/* The student's live screen sits on the quiz background, usually dark. */
+.qp-live-display--student .qp-wordcloud-hint {
+  color: rgba(255, 255, 255, .86);
+  font-size: 14px;
+}
+
+.qp-wordcloud-thanks-mark {
+  font-size: 64px;
+  line-height: 1;
+  animation: qp-wordcloud-float 3s ease-in-out infinite;
+}
+
+.qp-wordcloud-thanks-words {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+/* The student's screen sits on the quiz background, so the words are white chips with dark text. */
+.qp-wordcloud-thanks-words span {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .94);
+  color: #3b1e78;
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: 0 8px 22px rgba(20, 10, 50, .18);
+}
+
+/* -- the question editor -------------------------------------------------------- */
+
+.qp-wordcloud-editor {
+  display: grid;
+  gap: 14px;
+}
+
+.qp-wordcloud-setting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.qp-wordcloud-choices {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.qp-wordcloud-choices label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--qp-wc-panel-border);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.qp-wordcloud-choices label.active {
+  background: var(--qp-wc-c0);
+  border-color: var(--qp-wc-c0);
+  color: #fff;
+}
+
+html[data-theme="dark"] .qp-wordcloud-choices label.active {
+  color: #1b1330;
+}
+
+.qp-wordcloud-choices input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.qp-wordcloud-preview {
+  display: grid;
+  gap: 8px;
+  max-width: 420px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px dashed var(--qp-wc-panel-border);
+}
+
+.qp-wordcloud-preview small {
+  color: var(--qp-wc-text-muted);
+}
+
+.qp-wordcloud-preview-input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--qp-wc-panel-border);
+  color: var(--qp-wc-text-muted);
+  text-align: center;
+}
+
+.qp-wordcloud-notes {
+  margin: 0;
+  padding-inline-start: 18px;
+  color: var(--qp-wc-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.qp-creator-control-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  color: var(--qp-wc-text-muted);
+  font-size: 13px;
+}
+
+.qp-compact-preview-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px 6px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.qp-compact-preview-cloud b { color: var(--qp-wc-c0); font-size: 15px; }
+.qp-compact-preview-cloud i { color: var(--qp-wc-c1); font-size: 10px; font-style: normal; }
+.qp-compact-preview-cloud em { color: var(--qp-wc-c2); font-size: 12px; font-style: normal; }

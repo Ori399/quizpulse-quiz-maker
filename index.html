@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <script>window.QUIZPULSE_OFFLINE_CREATOR = true;</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuizPulse offline quiz maker</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%E2%9A%A1%3C%2Ftext%3E%3C%2Fsvg%3E" />
+  <link rel="stylesheet" href="./css/quizpulse_versions.css?v=52c8ba7c7cf6" />
+    <script src="./js/quizpulse_prepaint.js?v=0e196e887dd6"></script>
+  <link rel="stylesheet" href="./css/theme/creator.css?v=874775020bac" data-qp-theme-critical />
+  <link rel="stylesheet" href="./css/quizpulse_theme.css?v=847e78ce0aa5" media="print" data-qp-theme-full />
+  <link rel="stylesheet" href="./css/quizpulse_creator.css?v=2094866e767b" />
+  <link rel="stylesheet" href="./css/quizpulse_wordcloud.css?v=4b8b0c28d67a" />
+  <link rel="stylesheet" href="./css/quizpulse_final.css?v=c500a5435114" />
+  <link rel="stylesheet" href="./css/quizpulse_creator_smart.css?v=b78fbafd7b54" />
+  <link rel="stylesheet" href="./css/quizpulse_plan_locks.css?v=b9557d8fbcb4" />
+
+  <link rel="stylesheet" href="./css/quizpulse_sidebar.css?v=7d70bb6679b0" />
+</head>
+<body class="qp-minimal-ui qp-creator-body qp-dashboard-clean qp-creator-with-app-nav">
+  <aside class="qp-dashboard-sidebar qp-creator-app-sidebar" id="creatorAppSidebar" aria-label="Main menu">
+    <a class="qp-dashboard-logo" href="#"><span class="qp-dashboard-logo-icon">&#x26A1;</span><span>Quiz<span>Pulse</span></span></a>
+    <nav class="qp-dashboard-nav"></nav>
+  </aside>
+  <button class="qp-mobile-nav-backdrop qp-creator-nav-backdrop" id="creatorNavBackdrop" type="button" aria-label="Close menu"></button>
+  <header class="qp-topbar qp-world-topbar qp-creator-topbar-v18">
+    <div class="qp-top-left">
+      <a class="qp-brand" href="#"><span class="qp-logo">&#x26A1;</span><span>QuizPulse</span></a>
+      <button class="qp-btn icon qp-sidebar-toggle" id="globalMenuBtn" type="button" title="Menu">&#x2630;</button>
+    </div>
+    <div class="qp-title-chip qp-creator-title-chip">
+      <input class="qp-title-input" id="quizTitle" placeholder="Enter quiz title..." />
+      <span class="qp-pill qp-mode-pill" id="quizModeBadge">Normal</span>
+      <span class="qp-pill qp-general-folder-badge" id="quizScopeBadge" title="Student quizzes are saved only in General">&#x1F4C1; General</span>
+      <span class="qp-pill qp-initially-hidden" id="quizStatus">draft</span>
+    </div>
+    <div class="qp-actions qp-top-actions qp-calm-top-actions qp-creator-actionbar">
+      <span id="saveState" class="qp-save-state qp-save-state-good" aria-label="Saved" title="Saved"><span aria-hidden="true">&#x2713;</span></span>
+      <button class="qp-btn success" id="finishBtn" aria-label="Finish quiz"><span class="qp-finish-label-full">Finish</span><span class="qp-finish-label-compact" aria-hidden="true">Fin</span></button>
+      <a class="qp-btn soft-primary qp-creator-icon-action qp-initially-hidden" id="previewBtn" href="#" title="Practice quiz" aria-label="Practice quiz">&#x25B6;</a>
+      <a class="qp-btn primary qp-creator-icon-action qp-initially-hidden" id="hostBtn" href="#" title="Host quiz" aria-label="Host quiz">&#x26A1;</a>
+      <details class="qp-tools-menu">
+        <summary class="qp-btn subtle qp-creator-icon-action" title="More actions" aria-label="More actions">&#x22EF;</summary>
+        <div class="qp-tools-menu-panel">
+          <div class="qp-tools-menu-head">
+            <strong>More</strong>
+            <button class="qp-tools-menu-close" type="button" aria-label="Close more actions" title="Close">&times;</button>
+          </div>
+          <a class="qp-btn small" href="#">Exit creator</a>
+          <a class="qp-btn small" href="./templates/quizpulse_import_template.xlsx" download>Download XLSX template</a>
+          <button class="qp-btn small" id="importBtn" type="button">Import XLSX</button>
+          <button class="qp-btn small" id="exportQuizBtn" type="button">Export XLSX</button>
+          <button class="qp-btn small" id="quizVersionsBtn" type="button">Saved versions</button>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main class="qp-creator-shell" id="creatorShell">
+    <aside class="qp-side">
+      <button class="qp-side-collapsed" id="openLeft" title="Open questions">&#x2753;</button>
+      <div class="qp-side-head">
+        <button class="qp-btn icon" id="collapseLeft" title="Collapse question list">&#x2630;</button>
+        <div class="qp-side-title" id="questionPanelTitle">Questions</div>
+        <div class="qp-side-count" id="questionCountBadge">1 Q</div>
+        <button class="qp-btn icon qp-question-reorder-open" id="reorderQuestionsBtn" type="button" title="Reorder questions" aria-label="Reorder questions">&#x2195;</button>
+      </div>
+      <div class="qp-side-list" id="questionList"></div>
+      <div class="qp-side-actions">
+        <button class="qp-btn primary qp-side-add-btn" id="sideAddQuestionBtn" type="button" title="Add question" aria-label="Add question">+</button>
+        <button class="qp-btn primary qp-reorder-done-btn" id="reorderDoneBtn" type="button"><span aria-hidden="true">&#x2713;</span> Done</button>
+      </div>
+      <div class="qp-sr-only" id="questionReorderStatus" role="status" aria-live="polite"></div>
+    </aside>
+
+    <section class="qp-editor">
+      <div class="qp-editor-inner">
+        <div class="qp-question-stage" id="questionEditor"></div>
+      </div>
+    </section>
+
+    <aside class="qp-advanced qp-properties-sidebar" aria-label="More settings">
+      <div class="qp-properties-shell">
+        <div class="qp-properties-main">
+          <div class="qp-adv-head qp-properties-head">
+            <div>
+              <div class="qp-adv-title" id="rightPanelTitle">Settings</div>
+              <div class="qp-prop-subtitle" id="rightPanelSubtitle"></div>
+            </div>
+            <button class="qp-btn icon" id="collapseRight" title="Collapse properties">&times;</button>
+          </div>
+          <div class="qp-advanced-scroll qp-properties-scroll" id="advancedPanel"></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+  <div class="qp-creator-drawer-backdrop" id="creatorDrawerBackdrop" aria-hidden="true"></div>
+
+  <nav class="qp-creator-mobile-modes" aria-label="Creator views">
+    <button type="button" data-creator-mobile-view="questions"><span aria-hidden="true">&#x2637;</span><small>Questions</small></button>
+    <button class="active" type="button" data-creator-mobile-view="canvas"><span aria-hidden="true">&#x270E;</span><small>Canvas</small></button>
+  </nav>
+
+  <div class="qp-toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <input type="file" id="mediaFile" hidden accept="image/*,audio/*,video/*" />
+  <input type="file" id="backgroundFile" hidden accept="image/*" />
+  <input type="file" id="questionBackgroundFile" hidden accept="image/*" />
+  <input type="file" id="importFile" hidden accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+  <script src="./js/quizpulse_shared.js?v=c86204b28054"></script>
+  <script src="./js/quizpulse_page_i18n.js?v=e790caa88e2e"></script>
+  <script src="./js/pages/quizpulse_workspace_translations.js?v=ef4b33a1fa6e"></script>
+  <script src="./js/quizpulse_quiz_file.js?v=e65b323e2fe2"></script>
+  <script src="./js/quizpulse_creator.js?v=f4b911dbe5e9"></script>
+</body>
+</html>
+
+
+
+

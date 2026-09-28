@@ -1,0 +1,332 @@
+/* Shared authenticated-app sidebar - colour and the More tools group.
+ *
+ * LAYOUT IS NOT OWNED HERE. The v1.20.0 unified shell in quizpulse_theme.css
+ * owns the structure: a sticky rail at >=1181px, an off-canvas drawer with a
+ * backdrop below that, plus the collapsed rail variant. This file deliberately
+ * sets no width, position, display, overflow, border-radius or transform, so
+ * that structure keeps working and there is one owner for it rather than two.
+ *
+ * What this file does own is colour, and the reason it exists is that the rail
+ * was painted #17123b in four separate hardcoded places, so it never followed
+ * the reader's theme. The surface is now mixed from the theme's own primary
+ * over a near-black, which keeps the deep rail the design calls for while
+ * taking its hue from whatever theme the page is on. Contrast is fixed by
+ * construction: the rail is always dark, the type on it always light.
+ *
+ * Loads after quizpulse_theme.css and quizpulse_final.css. The `html body`
+ * prefix is what outranks their `!important` rules without adding a fifth
+ * competing layer; it can go when those duplicates do.
+ */
+
+:root {
+  --qp-sidebar-surface: color-mix(in srgb, var(--qpt-primary, #6d28d9) 20%, #0d0a1c);
+  --qp-sidebar-text: color-mix(in srgb, #ffffff 92%, var(--qpt-primary, #6d28d9));
+  --qp-sidebar-muted: color-mix(in srgb, var(--qp-sidebar-text) 74%, transparent);
+  --qp-sidebar-border: color-mix(in srgb, var(--qp-sidebar-text) 16%, transparent);
+  --qp-sidebar-hover: color-mix(in srgb, var(--qp-sidebar-text) 12%, transparent);
+  /* The raw primary, paired with the primary-text the theme ships with it.
+     Lifting the primary toward white to separate the pill from the rail was
+     measurably worse: it dropped white label text to about 4.3:1 on a green
+     theme. The pair the theme author picked is the one that holds contrast, so
+     the pill is separated from the rail with a hairline ring instead. */
+  --qp-sidebar-accent: var(--qpt-primary, #6d28d9);
+  --qp-sidebar-accent-text: var(--qpt-primary-text, #ffffff);
+  --qp-sidebar-accent-ring: color-mix(in srgb, #ffffff 24%, transparent);
+  /* A light tint of the theme, for type and marks that sit directly on the
+     rail, where the raw primary would be dark-on-dark. */
+  --qp-sidebar-accent-soft: color-mix(in srgb, var(--qpt-primary, #6d28d9) 38%, #ffffff);
+  --qp-sidebar-radius: 10px;
+}
+
+/* Academic is the one theme that asks for a light workspace rail. */
+html[data-qp-theme="academic-pulse"] {
+  --qp-sidebar-surface: var(--qpt-surface, #ffffff);
+  --qp-sidebar-text: #111827;
+  --qp-sidebar-muted: #4b5563;
+  --qp-sidebar-border: rgba(15, 23, 42, .12);
+  --qp-sidebar-hover: color-mix(in srgb, var(--qpt-primary, #6d28d9) 11%, transparent);
+  --qp-sidebar-accent: var(--qpt-primary, #6d28d9);
+  --qp-sidebar-accent-ring: transparent;
+  --qp-sidebar-accent-soft: var(--qpt-primary, #6d28d9);
+}
+
+/* ---------------------------------------------------------------- surface */
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar {
+  background: var(--qp-sidebar-surface) !important;
+  color: var(--qp-sidebar-text) !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--qp-sidebar-border) transparent;
+}
+
+/* ------------------------------------------------------------- plan locks */
+
+/* A page the organization's plan leaves out keeps its place with a small lock on the corner of its icon, so the lock
+   sits the same way on the rail, the collapsed rail and the phone bar. The icon only gains a position for it. */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-icon {
+  position: relative;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-icon .qp-nav-lock {
+  position: absolute;
+  inset-inline-end: -7px;
+  bottom: -5px;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--qp-sidebar-surface);
+  color: var(--qp-sidebar-accent-soft);
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-icon .qp-nav-lock svg {
+  display: block;
+  width: 11px;
+  height: 11px;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link[data-plan-locked]:not(.active) .qp-nav-label {
+  opacity: .72;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-logo,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-logo-title,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-logo > span:last-child {
+  color: var(--qp-sidebar-text) !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-logo-title strong,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-logo span span {
+  color: var(--qp-sidebar-accent-soft) !important;
+}
+
+/* The shell hardcoded this chip to #5b21b6, which is the one mark on the rail
+   that stayed purple on a blue or green theme. */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-logo .qp-dashboard-logo-icon {
+  background: var(--qp-sidebar-accent) !important;
+  color: var(--qp-sidebar-accent-text) !important;
+  box-shadow: inset 0 0 0 1px var(--qp-sidebar-accent-ring) !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar.qp-dashboard-sidebar button.qp-sidebar-collapse-btn {
+  border: 1px solid var(--qp-sidebar-border) !important;
+  background: var(--qp-sidebar-hover) !important;
+  color: var(--qp-sidebar-text) !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar.qp-dashboard-sidebar button.qp-sidebar-collapse-btn:hover,
+html body.qp-dashboard-clean .qp-dashboard-sidebar.qp-dashboard-sidebar button.qp-sidebar-collapse-btn:focus-visible {
+  background: var(--qp-sidebar-accent) !important;
+  color: var(--qp-sidebar-accent-text) !important;
+}
+
+/* Label sizing. Two deleted duplicate blocks in quizpulse_theme.css were the
+   only thing giving the label a flex basis; without it the shell's
+   `display: inline` label collapsed to about 23px and clipped every name. It
+   belongs with the rail, so it lives here now, with the ellipsis the shell
+   already wanted (the longest label, "Academic structure", is ~5px over the
+   216px rail). */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-label {
+  position: static !important;
+  display: block !important;
+  flex: 1 1 auto !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: auto !important;
+  color: inherit !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* ------------------------------------------------------------ nav items */
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary {
+  color: var(--qp-sidebar-muted) !important;
+  background: transparent !important;
+  border-radius: var(--qp-sidebar-radius) !important;
+  font-weight: 650 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: background .15s ease, color .15s ease;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link:hover,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link:focus-visible {
+  background: var(--qp-sidebar-hover) !important;
+  color: var(--qp-sidebar-text) !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link.active {
+  background: var(--qp-sidebar-accent) !important;
+  color: var(--qp-sidebar-accent-text) !important;
+  font-weight: 750 !important;
+  box-shadow: inset 0 0 0 1px var(--qp-sidebar-accent-ring) !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link:focus-visible,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary:focus-visible {
+  outline: 2px solid var(--qp-sidebar-text) !important;
+  outline-offset: 2px !important;
+}
+
+/* One flat icon treatment. The shell painted a chip behind the icon in some
+   states and stripped it in others, which is why the rail read as two-tone.
+   The 38px slot is the shell's and is left alone - only colour and the glyph
+   are set here, and the More tools icon is given the same slot so its label
+   lines up with the link labels above it. */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-icon,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary .qp-sidebar-more-icon {
+  display: inline-grid !important;
+  place-items: center;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: currentColor !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary .qp-sidebar-more-icon {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  flex: 0 0 38px;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-icon svg,
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary .qp-sidebar-more-icon svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+
+/* ----------------------------------------------------------- more tools */
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more {
+  display: block !important;
+  /* The nav grid is justify-items: center below 1181px. The links carry their
+     own width: 100%, so they fill the track; this <details> has no width of its
+     own and shrink-wrapped to about half the rail. */
+  justify-self: stretch !important;
+  align-self: stretch !important;
+  width: auto !important;
+  flex: 0 0 auto;
+  min-width: 0;
+  margin: 10px 0 4px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid var(--qp-sidebar-border) !important;
+}
+
+/* Mirrors the shell's own nav-link metrics (48px row, 5px 8px, 10px gap,
+   10px radius, 14px/900) so the group heads the list instead of sitting
+   slightly off it. */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 48px !important;
+  padding: 5px 8px !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary::-webkit-details-marker { display: none; }
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary:hover {
+  background: var(--qp-sidebar-hover) !important;
+  color: var(--qp-sidebar-text) !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The summary hides its disclosure triangle, so the group needs its own
+   affordance or it reads as a dead heading. */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  margin-inline-start: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .16s ease;
+  opacity: .75;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more[open] > summary::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+/* display on a <details> child overrides the closed state the browser applies
+   for us, so the closed case has to be written out explicitly - without this
+   the whole group renders open at all times. */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more:not([open]) > .qp-sidebar-more-panel {
+  display: none !important;
+}
+
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more[open] > .qp-sidebar-more-panel {
+  display: flex !important;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+/* Two grid corrections on the nav itself.
+ *
+ * grid-auto-rows was pinned to a flat 48px at several widths, which clamps the
+ * More tools group to one row and lets the expanded list overlap the links
+ * under it. minmax keeps the 48px floor every link relies on and lets the one
+ * row that needs to grow, grow.
+ *
+ * grid-template-columns is a leftover from an older three-across mobile menu
+ * (quizpulse_theme.css, max-width: 760px). Nothing since resets it, so inside
+ * the 310px drawer the nav lays out 453px wide and the third column is cut
+ * off the edge of the screen. The rail is a vertical list at every width. */
+html body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav {
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-auto-rows: minmax(48px, auto) !important;
+}
+
+/* Collapsed rail. Owning the label above means owning it here too, at a
+   specificity that beats it: otherwise the shell's own display:none loses and
+   a zero-width label box is left behind next to every icon. Both labels are
+   safe to drop outright - the renderer puts the same text on each link's
+   aria-label and title. */
+html body.qp-sidebar-collapsed.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-label,
+html.qp-sidebar-collapsed-prepaint body.qp-dashboard-clean .qp-dashboard-sidebar .qp-dashboard-nav a.qp-nav-link .qp-nav-label,
+html body.qp-sidebar-collapsed.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary .qp-sidebar-more-label,
+html.qp-sidebar-collapsed-prepaint body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary .qp-sidebar-more-label {
+  display: none !important;
+}
+
+html body.qp-sidebar-collapsed.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary {
+  justify-content: center !important;
+  gap: 0 !important;
+  padding-inline: 10px !important;
+}
+
+html body.qp-sidebar-collapsed.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary::after { display: none; }
+
+/* Academic keeps an explicit black More tools label on its light rail. */
+html[data-qp-theme="academic-pulse"] body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary,
+html[data-qp-theme="academic-pulse"] body.qp-dashboard-clean .qp-dashboard-sidebar .qp-sidebar-more > summary:hover {
+  color: #111827 !important;
+}
